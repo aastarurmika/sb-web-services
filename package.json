@@ -30,8 +30,8 @@
     "composable-middleware": "^0.3.0",
     "compression": "^1.7.4",
     "connect-timeout": "^1.9.0",
-    "cors": "^2.8.5",
     "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
     "date-fns": "^2.0.1",
     "express": "^4.17.1",
     "express-fileupload": "^1.1.4",
@@ -43,6 +43,7 @@
     "keycloak-connect": "^3.4.3",
     "morgan": "^1.9.1",
     "node-xlsx": "^0.15.0",
+    "pg": "^8.4.2",
     "request": "^2.88.0",
     "uuid": "^3.3.2"
   },

@@ -15,6 +15,7 @@ const apiEndpoints = {
 
 export async function getUserRoles(userId: string, rootOrg: string) {
   try {
+   
     const response = await axios.get(
       `${CONSTANTS.ROLES_API_BASE}/v2/users/${userId}/roles`,
       {
@@ -26,7 +27,10 @@ export async function getUserRoles(userId: string, rootOrg: string) {
     )
     return response.data
   } catch (error) {
-    return ['author']
+    return {
+  default_roles: [ 'author' ],
+  user_roles: [ ]
+}
   }
 }
 

@@ -47,7 +47,6 @@ detailsApi.get('/', async (req, res) => {
 })
 
 detailsApi.get('/wtoken', async (req, res) => {
-  // console.log('called /wtoken')
   try {
     const rootOrg = req.header('rootOrg') || ''
     const org = req.header('org') || ''
