@@ -10,11 +10,12 @@ export const homePage = Router()
 
 homePage.get('/latestCourses', async (req, res) => {
   try {
+    const filters = {request:{"pageSize":20,"query":"","didYouMean":true,"filters":{"lastUpdatedOn":["month"],"contentType":["Course","Program"]},"locale":["en"]}};
 
     const reqBody = {
       ...req.body,
       request: {
-        ...req.body.request,
+        ...filters.request,
         rootOrg: req.header('rootOrg'),
         uuid:  'ec2687b9-7b86-4321-bbc7-8c9509b834ee',
       },
