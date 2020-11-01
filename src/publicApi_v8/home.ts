@@ -10,7 +10,19 @@ export const homePage = Router()
 
 homePage.get('/latestCourses', async (req, res) => {
   try {
-    const filters = {request:{"pageSize":20,"query":"","didYouMean":true,"filters":{"lastUpdatedOn":["month"],"contentType":["Course","Program"]},"locale":["en"]}};
+    const filters = {
+      request:
+      {
+        didYouMean: true,
+        filters: {
+          contentType: ['Course', 'Program'],
+          lastUpdatedOn: ['month'],
+          locale: ['en'],
+        },
+        pageSize: 20,
+        query: '',
+      },
+    }
 
     const reqBody = {
       ...req.body,
