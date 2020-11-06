@@ -214,10 +214,8 @@ detailsApi.get('/detailV2', async (req, res) => {
 
 detailsApi.post('/detailV2', async (req, res) => {
   const _rootOrg = req.header('rootOrg')
-  //const wid = extractUserIdFromRequest(req)
   const url = API_END_POINTS.detail
   const wid = req.body.wid
-  console.log(req.body)
   try {
     if (!_rootOrg) {
       res.status(400).send(ERROR.ERROR_NO_ORG_DATA)
