@@ -54,6 +54,7 @@ progressApi.get('/', async (req, res) => {
       method: 'GET',
       url: API_END_POINTS.hash(extractUserIdFromRequest(req)),
     })
+    console.log('Progress', API_END_POINTS.hash(extractUserIdFromRequest(req)))
     res.json(response.data)
   } catch (err) {
     logErrorHeading('PROGRESS HASH ERROR')

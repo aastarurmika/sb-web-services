@@ -32,3 +32,4 @@ Thumbs.db
 
 #config
 /nodemon/nodemon-aastar.json
+/nodemon/.env

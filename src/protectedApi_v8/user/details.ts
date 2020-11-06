@@ -186,7 +186,38 @@ detailsApi.post('/detailV1', async (req, res) => {
 detailsApi.get('/detailV2', async (req, res) => {
   const _rootOrg = req.header('rootOrg')
   const wid = extractUserIdFromRequest(req)
-  const url = `http://10.177.22.26:9200/user/multi-fetch/wid`
+  const url = API_END_POINTS.detail
+  try {
+    if (!_rootOrg) {
+      res.status(400).send(ERROR.ERROR_NO_ORG_DATA)
+      return
+    }
+    const response = await axios.post(
+      url,
+      {
+        conditions: {
+          root_org: _rootOrg,
+        },
+        source_fields: ['wid', 'email', 'first_name', 'last_name'],
+        values: [wid],
+      },
+      {
+        ...axiosRequestConfig,
+        headers: { _rootOrg },
+      }
+    )
+    res.json(response.data[0])
+  } catch (err) {
+    res.status(500).send(err.response.data)
+  }
+})
+
+detailsApi.post('/detailV2', async (req, res) => {
+  const _rootOrg = req.header('rootOrg')
+  //const wid = extractUserIdFromRequest(req)
+  const url = API_END_POINTS.detail
+  const wid = req.body.wid
+  console.log(req.body)
   try {
     if (!_rootOrg) {
       res.status(400).send(ERROR.ERROR_NO_ORG_DATA)
