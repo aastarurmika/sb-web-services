@@ -1,22 +1,22 @@
 
-import { Router } from 'express'
 import axios from 'axios'
-import { logError } from '../utils/logger'
-import { IContent } from '../models/content.model'
+import { Router } from 'express'
 import { axiosRequestConfig } from '../configs/request.config'
+import { IContent } from '../models/content.model'
 import { searchV5 } from '../protectedApi_v8/content'
+import { logError } from '../utils/logger'
 const GENERAL_ERROR_MSG = 'Failed due to unknown reason'
 import { processContent } from '../utils/contentHelpers'
 
 import { getFilters } from '../service/catalog'
-import { ERROR } from '../utils/message'
-// import { extractUserIdFromRequest } from '../utils/requestExtract'
 import { CONSTANTS } from '../utils/env'
+import { ERROR } from '../utils/message'
 const API_END_POINTS = {
   searchV6: `${CONSTANTS.SEARCH_API_BASE}/v6/search`,
 }
 export const homePage = Router()
 
+const adminId = 'ec2687b9-7b86-4321-bbc7-8c9509b834ee'
 homePage.get('/latestCourses', async (req, res) => {
   try {
     const filters = {
@@ -38,7 +38,7 @@ homePage.get('/latestCourses', async (req, res) => {
       request: {
         ...filters.request,
         rootOrg: req.header('rootOrg'),
-        uuid: 'ec2687b9-7b86-4321-bbc7-8c9509b834ee',
+        uuid: adminId,
       },
     }
 
@@ -54,14 +54,14 @@ homePage.get('/latestCourses', async (req, res) => {
   }
 })
 
-//searchv6
+// searchv6
 
 homePage.post('/searchV6', async (req, res) => {
   try {
     const body = {
       ...req.body,
       rootOrg: req.header('rootOrg'),
-      uuid: 'ec2687b9-7b86-4321-bbc7-8c9509b834ee',
+      uuid: adminId,
     }
     const response = await axios.post(API_END_POINTS.searchV6, body, axiosRequestConfig)
     const contents: IContent[] = response.data.result
@@ -87,13 +87,11 @@ homePage.post('/searchV6', async (req, res) => {
   }
 })
 
-
-//catalog
-
+// catalog
 
 homePage.get('/catalog', async (req, res) => {
   try {
-    const userId = 'ec2687b9-7b86-4321-bbc7-8c9509b834ee'
+    const userId = adminId
     const rootOrg = req.headers.rootorg
     if (!rootOrg) {
       res.status(400).send(ERROR.ERROR_NO_ORG_DATA)
@@ -107,7 +105,6 @@ homePage.get('/catalog', async (req, res) => {
 
     res.status(400).send({ error: ERROR.ERROR_NO_ORG_DATA })
   } catch (err) {
-    console.log(err)
     res.status((err && err.response && err.response.status) || 500).send(
       (err && err.response && err.response.data) || {
 
@@ -116,8 +113,6 @@ homePage.get('/catalog', async (req, res) => {
     )
   }
 })
-
-
 
 // homePage.get('/popularCourses', async (req, res) => {
 //   try {
