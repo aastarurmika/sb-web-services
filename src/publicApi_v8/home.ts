@@ -1,11 +1,20 @@
 
 import { Router } from 'express'
-
+import axios from 'axios'
 import { logError } from '../utils/logger'
-
-import {searchV5} from '../protectedApi_v8/content'
+import { IContent } from '../models/content.model'
+import { axiosRequestConfig } from '../configs/request.config'
+import { searchV5 } from '../protectedApi_v8/content'
 const GENERAL_ERROR_MSG = 'Failed due to unknown reason'
+import { processContent } from '../utils/contentHelpers'
 
+import { getFilters } from '../service/catalog'
+import { ERROR } from '../utils/message'
+// import { extractUserIdFromRequest } from '../utils/requestExtract'
+import { CONSTANTS } from '../utils/env'
+const API_END_POINTS = {
+  searchV6: `${CONSTANTS.SEARCH_API_BASE}/v6/search`,
+}
 export const homePage = Router()
 
 homePage.get('/latestCourses', async (req, res) => {
@@ -29,7 +38,7 @@ homePage.get('/latestCourses', async (req, res) => {
       request: {
         ...filters.request,
         rootOrg: req.header('rootOrg'),
-        uuid:  'ec2687b9-7b86-4321-bbc7-8c9509b834ee',
+        uuid: 'ec2687b9-7b86-4321-bbc7-8c9509b834ee',
       },
     }
 
@@ -44,6 +53,71 @@ homePage.get('/latestCourses', async (req, res) => {
     )
   }
 })
+
+//searchv6
+
+homePage.post('/searchV6', async (req, res) => {
+  try {
+    const body = {
+      ...req.body,
+      rootOrg: req.header('rootOrg'),
+      uuid: 'ec2687b9-7b86-4321-bbc7-8c9509b834ee',
+    }
+    const response = await axios.post(API_END_POINTS.searchV6, body, axiosRequestConfig)
+    const contents: IContent[] = response.data.result
+    if (Array.isArray(contents)) {
+      response.data.result = contents.map((content) => processContent(content))
+    }
+    res.json(
+      response.data || {
+        filters: [],
+        filtersUsed: [],
+        notVisibleFilters: [],
+        result: [],
+        totalHits: 0,
+      }
+    )
+  } catch (err) {
+    logError('SEARCH V6 API ERROR >', err)
+    res.status((err && err.response && err.response.status) || 500).send(
+      (err && err.response && err.response.data) || {
+        error: GENERAL_ERROR_MSG,
+      }
+    )
+  }
+})
+
+
+//catalog
+
+
+homePage.get('/catalog', async (req, res) => {
+  try {
+    const userId = 'ec2687b9-7b86-4321-bbc7-8c9509b834ee'
+    const rootOrg = req.headers.rootorg
+    if (!rootOrg) {
+      res.status(400).send(ERROR.ERROR_NO_ORG_DATA)
+      return
+    }
+    if (typeof rootOrg === 'string') {
+      const filters = await getFilters(userId, rootOrg, 'catalogPaths')
+      res.send(filters)
+      return
+    }
+
+    res.status(400).send({ error: ERROR.ERROR_NO_ORG_DATA })
+  } catch (err) {
+    console.log(err)
+    res.status((err && err.response && err.response.status) || 500).send(
+      (err && err.response && err.response.data) || {
+
+        error: 'Failed due to unknown reason',
+      }
+    )
+  }
+})
+
+
 
 // homePage.get('/popularCourses', async (req, res) => {
 //   try {
