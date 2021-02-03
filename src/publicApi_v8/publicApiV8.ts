@@ -1,6 +1,7 @@
 import express from 'express'
 import { CONSTANTS } from '../utils/env'
 import { proxyCreatorRoute } from '../utils/proxyCreator'
+import { customSignUp } from './customSignup'
 import { homePage } from './home'
 import { signup } from './signup'
 import { publicTnc } from './tnc'
@@ -19,3 +20,4 @@ publicApiV8.use('/assets',
 publicApiV8.use('/tnc', publicTnc)
 publicApiV8.use('/signup', signup)
 publicApiV8.use('/homePage', homePage)
+publicApiV8.use('/register/',customSignUp)
