@@ -5,6 +5,7 @@ import { axiosRequestConfig } from '../configs/request.config'
 import { logError } from '../utils/logger'
 
 import { CONSTANTS } from '../utils/env'
+import { certificationApi } from '../protectedApi_v8/certifications'
 
 export const customSignUp = Router()
 
@@ -109,12 +110,23 @@ customSignUp.post('/resetPassword', async (req, res) => {
 customSignUp.post('/setPasswordWithOTP', async (req, res) => {
   const username = req.body.username
   const password = req.body.password
+  const otp = req.body.otp
   const userData = await getUser(username)
   if (userData) {
-    if (true) {
-      const userId = userData[0].id
-      const status = resetKCPassword(userId, password)
-      res.status(200).send(status)
+    const verification = await verifyOTP(username, otp);
+    if (verification.type==='success') {
+      
+      try{
+        const userId = userData[0].id
+      
+        const status = resetKCPassword(userId, password)
+        res.status(200).send(status)
+
+      }
+      catch(e){
+        res.status(500).send(e.response);
+      }
+      
     } else {
       res.status(401).send(
         {
