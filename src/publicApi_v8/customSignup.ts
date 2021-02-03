@@ -4,7 +4,6 @@ import { axiosRequestConfig } from '../configs/request.config'
 
 import { logError } from '../utils/logger'
 
-import { certificationApi } from '../protectedApi_v8/certifications'
 import { CONSTANTS } from '../utils/env'
 
 export const customSignUp = Router()
