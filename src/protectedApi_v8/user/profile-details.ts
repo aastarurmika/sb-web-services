@@ -13,6 +13,7 @@ const API_END_POINTS = {
     getMasterNationalities: `${CONSTANTS.USER_PROFILE_API_BASE}/public/v8/profileDetails/getMasterNationalities`,
     getProfilePageMeta: `${CONSTANTS.USER_PROFILE_API_BASE}/public/v8/profileDetails/getProfilePageMeta`,
     getUserRegistry: `${CONSTANTS.USER_PROFILE_API_BASE}/public/v8/profileDetails/getUserRegistry`,
+    getUserRegistryById: `${CONSTANTS.USER_PROFILE_API_BASE}/public/v8/profileDetails/getUserRegistryById`,
     setUserProfileStatus: `${CONSTANTS.USER_PROFILE_API_BASE}/public/v8/profileDetails/setUserProfileStatus`,
     userProfileStatus: `${CONSTANTS.USER_PROFILE_API_BASE}/public/v8/profileDetails/userProfileStatus`,
     // tslint:disable-next-line: object-literal-sort-keys
@@ -64,6 +65,23 @@ profileDeatailsApi.get('/getUserRegistry', async (req, res) => {
         logError('ERROR FETCHING USER REGISTRY >', err)
         res.status((err && err.response && err.response.status) || 500).send(err)
     }
+})
+profileDeatailsApi.get('/getUserRegistryById/:id', async (req, res) => {
+  try {
+      let userId = req.params.id
+      if (!userId) {
+          userId = extractUserIdFromRequest(req)
+      }
+      logInfo('Get user registry for', userId)
+
+      const response = await axios.post(API_END_POINTS.getUserRegistry, { userId }, {
+          ...axiosRequestConfig,
+      })
+      res.status(response.status).send(response.data)
+  } catch (err) {
+      logError('ERROR FETCHING USER REGISTRY >', err)
+      res.status((err && err.response && err.response.status) || 500).send(err)
+  }
 })
 
 profileDeatailsApi.get('/userProfileStatus', async (req, res) => {
