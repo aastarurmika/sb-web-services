@@ -24,9 +24,11 @@ customSignUp.post('/registerUserWithEmail', async (req, res) => {
   try {
     const newUser = await createKCUser(req)
     if (newUser.data.errorMessage) {
-      res.status(500).send(newUser.data.errorMessage)
+      res.status(500).send({
+        error: `Error Creating User : ${newUser.data.errorMessage}`,
+      })
     } else {
-      res.status(200).send('Success')
+      res.status(200).json({message: 'Success'})
     }
   } catch (e) {
     res.status(401).send(
@@ -41,7 +43,7 @@ customSignUp.post('/registerUserWithMobile', async (req, res) => {
   const mobileNumber = req.body.mobileNumber
   // generate otp
   await sendOTP(mobileNumber)
-  res.status(200).send('Success')
+  res.status(200).json({message: 'Success'})
   return
 })
 
@@ -55,9 +57,11 @@ customSignUp.post('/verifyUserWithMobileNumber', async (req, res) => {
     try {
       const newUser = await createKCUser(req)
       if (newUser.data.errorMessage) {
-        res.status(500).send(newUser.data.errorMessage)
+        res.status(500).send({
+          error: `Error Creating User : ${newUser.data.errorMessage}`,
+        })
       } else {
-        res.status(200).send('Success')
+        res.status(200).json({message: 'Success'})
       }
     } catch (e) {
       res.status(401).send(
@@ -85,11 +89,11 @@ customSignUp.post('/resetPassword', async (req, res) => {
     const type = emailOrMobile(username)
     if (type === 'phone') {
       await sendOTP(username)
-      res.status(200).send('Success')
+      res.status(200).json({message: 'Success'})
     } else if (type === 'email') {
       // triger email rest password
       await emailactionKC(userData[0].id, 'resetPassword')
-      res.status(200).send('Success')
+      res.status(200).json({message: 'Success'})
     } else {
       res.status(401).send(
         {
@@ -119,10 +123,12 @@ customSignUp.post('/setPasswordWithOTP', async (req, res) => {
         const userId = userData[0].id
 
         const status = resetKCPassword(userId, password)
-        res.status(200).send(status)
+        res.status(200).json({message: status})
 
       } catch (e) {
-        res.status(500).send(e.response)
+        res.status(500).send({
+          error: e.response
+        })
       }
 
     } else {
