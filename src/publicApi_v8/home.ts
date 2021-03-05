@@ -15,6 +15,7 @@ import { ERROR } from '../utils/message'
 const API_END_POINTS = {
   searchAutoComplete: `${CONSTANTS.ES_BASE}`,
   searchV6: `${CONSTANTS.SEARCH_API_BASE}/v6/search`,
+  
 }
 
 export const homePage = Router()
