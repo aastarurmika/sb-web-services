@@ -35,7 +35,7 @@ generateQRCodeApi.post('/', async (req, res) => {
 
     })
 
-    return res.send(response.data)
+    return res.send({data : response.data})
   } catch (err) {
     return res.status((err && err.response && err.response.status) || 400).send(
       (err && err.response && err.response.data) || {
