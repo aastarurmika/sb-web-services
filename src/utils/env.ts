@@ -57,9 +57,9 @@ export const CONSTANTS = {
   MULTI_TENANT_KEYCLOAK:
     env.MULTI_TENANT_KEYCLOAK ||
     'localhost,https://siemens-staging.onwingspan.com/auth,wingspan;localhost,https://siemens-staging.onwingspan.com/auth,wingspan',
-  MSG91BASE : 'https://api.msg91.com',
-  MSG91KEY : env.MSG91KEY ,
-  MSG91TEMPLATEID : env.MSG91TEMPLATEID,
+  MSG91BASE: 'https://api.msg91.com',
+  MSG91KEY: env.MSG91KEY,
+  MSG91TEMPLATEID: env.MSG91TEMPLATEID,
   NAVIGATOR_JSON_HOST:
     env.NAVIGATOR_JSON_HOST || 'http://10.177.157.30:3007/web-hosted/navigator/json',
   NODE_API_BASE: env.NODE_API_BASE || 'http://10.177.22.26:5001',
@@ -114,6 +114,13 @@ export const CONSTANTS = {
   COHORTS_API_BASE: env.COHORTS_API_BASE || env.SB_EXT_API_BASE_2,
   CONTENT_SOURCE_API_BASE: env.CONTENT_SOURCE_API_BASE || env.SB_EXT_API_BASE_2,
   CONTINUE_LEARNING_API_BASE: env.CONTINUE_LEARNING_API_BASE || env.SB_EXT_API_BASE_2,
+
+  CERTIFICATE_QR_GENERATOR_URL:
+  env.CERTIFICATE_QR_GENERATOR_URL ||
+  'https://aryon8qv9d.execute-api.ap-south-1.amazonaws.com/prod/certificateQRGenerator',
+  CERTIFICATE_QR_GENERATOR_API_KEY: env.CERTIFICATE_QR_GENERATOR_API_KEY || '6j6dt6mcZi4Hlld7Rpk1x4cjBa5CLvxHaOh9QDSK',
+  CERTIFICATE_QR_VERIFY_URL: env.CERTIFICATE_QR_VERIFY_URL ||
+  'https://m6p7088w2a.execute-api.ap-south-1.amazonaws.com/prod/certiQRValidator',
 }
 
 export const RESTRICTED_PYTHON_STMT: string[] = process.env.RESTRICTED_CHARACTERS
