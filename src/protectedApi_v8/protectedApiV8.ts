@@ -19,6 +19,7 @@ import { socialApi } from './social'
 import { trainingApi } from './training'
 import { translateApi } from './translate'
 import { user } from './user/user'
+import { generateQRCodeApi } from './qrcode-generation'
 
 export const protectedApiV8 = express.Router()
 
@@ -48,3 +49,4 @@ protectedApiV8.use('/events', eventsApi)
 protectedApiV8.use('/translate', translateApi)
 protectedApiV8.use('/attended-content', attendedContentApi)
 protectedApiV8.use('/event-external', externalEventsApi)
+protectedApiV8.use('/generateQRCode', generateQRCodeApi)

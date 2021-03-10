@@ -17,6 +17,8 @@ import { publicApiV8 } from './publicApi_v8/publicApiV8'
 import { CustomKeycloak } from './utils/custom-keycloak'
 import { CONSTANTS } from './utils/env'
 import { logInfo, logSuccess } from './utils/logger'
+import { publicproxy } from './publicApi_v8/proxy'
+
 const cookieParser = require('cookie-parser')
 
 function haltOnTimedOut(req: Express.Request, _: Express.Response, next: NextFunction) {
@@ -40,6 +42,7 @@ export class Server {
     this.authoringProxies()
     this.configureMiddleware()
     this.servePublicApi()
+    this.servePublicProxy()
     this.serverProtectedApi()
     this.serverProxies()
     this.authoringApi()
@@ -117,6 +120,10 @@ export class Server {
 
   private servePublicApi() {
     this.app.use('/public/v8', publicApiV8)
+  }
+
+  private servePublicProxy() {
+    this.app.use('/public/proxy', publicproxy)
   }
 
   private serverProtectedApi() {
