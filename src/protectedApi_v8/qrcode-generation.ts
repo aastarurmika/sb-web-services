@@ -34,6 +34,7 @@ generateQRCodeApi.post('/', async (req, res) => {
     })
 
     if (coursedetails.data.earned.length > 0) {
+      /* tslint:disable */
       const course = coursedetails.data.earned.filter((b: any) => b.badge_id === req.body.course)
       courseName = course[0].badge_name
       courseDate = course[0].last_received_date
