@@ -240,7 +240,7 @@ export async function createKCUser(req: any) {
     if (req.body.type === 'email') {
       reqBody.email = req.body.data.email
     } else {
-      reqBody.email = `${req.body.data.username}@aastar.org`
+      reqBody.email = `${req.body.data.username}@aastrika.in`
       reqBody.emailVerified = true
     }
 
