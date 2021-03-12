@@ -32,7 +32,7 @@ generateQRCodeApi.post('/', async (req, res) => {
       ...axiosRequestConfig,
       headers: { rootOrg, langCode },
     })
-
+    coursedetails.data.earned = [...coursedetails.data.earned, ...coursedetails.data.recent]
     if (coursedetails.data.earned.length > 0) {
       /* tslint:disable */
       const course = coursedetails.data.earned.filter((b: any) => b.badge_id === req.body.course)
