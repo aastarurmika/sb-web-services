@@ -85,15 +85,24 @@ customSignUp.post('/resetPassword', async (req, res) => {
   const username = req.body.username
   const userData = await getUser(username)
   // email or mobile
-  if (userData) {
+  if (userData.length > 0) {
     const type = emailOrMobile(username)
     if (type === 'phone') {
       await sendOTP(username)
       res.status(200).json({message: 'Success'})
     } else if (type === 'email') {
       // triger email rest password
+      try {
       await emailactionKC(userData[0].id, 'resetPassword')
       res.status(200).json({message: 'Success'})
+      } catch (err) {
+        res.status(401).send(
+          {
+            error: err,
+          }
+        )
+      }
+
     } else {
       res.status(401).send(
         {
@@ -157,7 +166,7 @@ export function emailOrMobile(value: string) {
 
 export function emailValidator(value: string) {
   // tslint:disable-next-line: max-line-length
-  return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
+  return /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(value)
 }
 const mobileValidator = (value: string) => {
   return /^([7-9][0-9]{9})$/.test(value)
@@ -166,6 +175,7 @@ const mobileValidator = (value: string) => {
 export async function sendOTP(mobileNumber: string) {
   try {
     mobileNumber = '91' + mobileNumber
+     // tslint:disable-next-line: max-line-length
     const url = `${API_END_POINTS.sendOTP}?authkey=${msgKey}&template_id=${CONSTANTS.MSG91TEMPLATEID}&mobile=${mobileNumber}&invisible=1`
     return await axios.get(url, axiosRequestConfig)
   } catch (err) {
@@ -263,7 +273,8 @@ export async function createKCUser(req: any) {
 
 export async function getUser(username: string) {
   try {
-    const url = `${CONSTANTS.HTTPS_HOST}/auth/admin/realms/${CONSTANTS.KEYCLOAK_REALM}/users?username=${username}`
+     // tslint:disable-next-line: max-line-length
+    const url = `${CONSTANTS.HTTPS_HOST}/auth/admin/realms/${CONSTANTS.KEYCLOAK_REALM}/users?username=${encodeURIComponent(username)}`
     const token = await getKCToken()
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -278,7 +289,8 @@ export async function getUser(username: string) {
 
 export async function resetKCPassword(userId: string, password: string) {
   try {
-    const url = `${CONSTANTS.HTTPS_HOST}/auth/admin/realms/${CONSTANTS.KEYCLOAK_REALM}/users/${userId}/reset-password`
+     // tslint:disable-next-line: max-line-length
+    const url = `${CONSTANTS.HTTPS_HOST}/auth/admin/realms/${CONSTANTS.KEYCLOAK_REALM}/users/${encodeURIComponent(userId)}/reset-password`
     const body = {
       temporary: false,
       type: 'password',
@@ -297,8 +309,10 @@ export async function resetKCPassword(userId: string, password: string) {
   }
 }
 
-export async function emailactionKC(userId: string, action: string) {
-  const url = `${CONSTANTS.HTTPS_HOST}/auth/admin/realms/${CONSTANTS.KEYCLOAK_REALM}/users/${userId}/execute-actions-email`
+export async function
+emailactionKC(userId: string, action: string) {
+   // tslint:disable-next-line: max-line-length
+  const url = `${CONSTANTS.HTTPS_HOST}/auth/admin/realms/${CONSTANTS.KEYCLOAK_REALM}/users/${encodeURIComponent(userId)}/execute-actions-email`
   const token = await getKCToken()
   const headers = {
     Authorization: `Bearer ${token}`,
