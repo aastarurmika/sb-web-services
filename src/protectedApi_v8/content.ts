@@ -491,14 +491,13 @@ contentApi.post('/searchV6', async (req, res) => {
     )
   }
 })
-
 contentApi.post('/searchByOrgID', async (req, res) => {
   try {
     const searchob = req.body.searchFilters
     let inp = -1
     const result = searchob.filters[0].andFilters.some((e: object) => e.hasOwnProperty('sourceName'))
 
-    if (result) {// send error message or handle it in backend for validating if 'sourceName' property exist or not 
+    if (result) {// send error message or handle it in backend for validating if 'sourceName' property exist or not
 
       // handling from backend
       /* tslint:disable */
