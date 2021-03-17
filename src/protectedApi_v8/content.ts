@@ -6,7 +6,7 @@ import { ECollectionTypes, IContent, IContentMinimal } from '../models/content.m
 import { IPaginatedApiResponse } from '../models/paginatedApi.model'
 import { getMinimalContent, processContent } from '../utils/contentHelpers'
 import { CONSTANTS } from '../utils/env'
-import { logError } from '../utils/logger'
+import { logError, logInfo } from '../utils/logger'
 import { ERROR } from '../utils/message'
 import { extractUserIdFromRequest } from '../utils/requestExtract'
 import { getPlaylist } from './user/playlist'
@@ -468,6 +468,66 @@ contentApi.post('/searchV6', async (req, res) => {
       rootOrg: req.header('rootOrg'),
       uuid: extractUserIdFromRequest(req),
     }
+    const response = await axios.post(API_END_POINTS.searchV6, body, axiosRequestConfig)
+    const contents: IContent[] = response.data.result
+    if (Array.isArray(contents)) {
+      response.data.result = contents.map((content) => processContent(content))
+    }
+    res.json(
+      response.data || {
+        filters: [],
+        filtersUsed: [],
+        notVisibleFilters: [],
+        result: [],
+        totalHits: 0,
+      }
+    )
+  } catch (err) {
+    logError('SEARCH V6 API ERROR >', err)
+    res.status((err && err.response && err.response.status) || 500).send(
+      (err && err.response && err.response.data) || {
+        error: GENERAL_ERROR_MSG,
+      }
+    )
+  }
+})
+
+contentApi.post('/searchByOrgID', async (req, res) => {
+  try {
+    const searchob = req.body.searchFilters
+    let inp = -1
+    const result = searchob.filters[0].andFilters.some((e: object) => e.hasOwnProperty('sourceName'))
+
+    if (result) {// send error message or handle it in backend for validating if 'sourceName' property exist or not 
+
+      // handling from backend
+      /* tslint:disable */
+      searchob.filters[0].andFilters.forEach((v: any, i: number) => {
+          if (v.sourceName) {
+              inp = i
+          }
+       })
+      if (inp >= 0) {searchob.filters[0].andFilters.splice(inp, 1)}
+      searchob.filters[0].andFilters.push( {
+          sourceName: req.body.orgId,
+      })
+
+      // send error response
+      // return res.status(400).send({error: 'Failed due to unknown reason'})
+
+    } else { // push sourceName
+          searchob.filters[0].andFilters.push( {
+            sourceName: req.body.orgId,
+        })
+    }
+
+    const body = {
+      ...searchob,
+      rootOrg: req.header('rootOrg'),
+      uuid: extractUserIdFromRequest(req),
+    }
+
+    logInfo('SEARCH BY ORG ID ', result)
     const response = await axios.post(API_END_POINTS.searchV6, body, axiosRequestConfig)
     const contents: IContent[] = response.data.result
     if (Array.isArray(contents)) {
