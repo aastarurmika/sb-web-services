@@ -497,9 +497,7 @@ contentApi.post('/searchByOrgID', async (req, res) => {
     let inp = -1
     const result = searchob.filters[0].andFilters.some((e: object) => e.hasOwnProperty('sourceName'))
 
-    if (result) {// send error message or handle it in backend for validating if 'sourceName' property exist or not
-
-      // handling from backend
+    if (result) {//validating if 'sourceName' property exist or not
       /* tslint:disable */
       searchob.filters[0].andFilters.forEach((v: any, i: number) => {
           if (v.sourceName) {
@@ -510,9 +508,6 @@ contentApi.post('/searchByOrgID', async (req, res) => {
       searchob.filters[0].andFilters.push( {
           sourceName: req.body.orgId,
       })
-
-      // send error response
-      // return res.status(400).send({error: 'Failed due to unknown reason'})
 
     } else { // push sourceName
           searchob.filters[0].andFilters.push( {
@@ -526,7 +521,7 @@ contentApi.post('/searchByOrgID', async (req, res) => {
       uuid: extractUserIdFromRequest(req),
     }
 
-    logInfo('SEARCH BY ORG ID ', result)
+    logInfo('SEARCH BY ORG ID ')
     const response = await axios.post(API_END_POINTS.searchV6, body, axiosRequestConfig)
     const contents: IContent[] = response.data.result
     if (Array.isArray(contents)) {
