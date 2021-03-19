@@ -497,7 +497,7 @@ contentApi.post('/searchByOrgID', async (req, res) => {
     let inp = -1
     const result = searchob.filters[0].andFilters.some((e: object) => e.hasOwnProperty('sourceName'))
 
-    if (result) {//validating if 'sourceName' property exist or not
+    if (result) {// validating if 'sourceName' property exist or not
       /* tslint:disable */
       searchob.filters[0].andFilters.forEach((v: any, i: number) => {
           if (v.sourceName) {
