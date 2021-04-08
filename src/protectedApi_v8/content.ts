@@ -511,7 +511,7 @@ contentApi.post('/searchByOrgID', async (req, res) => {
 
     } else { // push sourceName
           searchob.filters[0].andFilters.push( {
-            sourceName: req.body.orgId,
+            sourceName: req.body.orgId
         })
     }
 
@@ -527,6 +527,10 @@ contentApi.post('/searchByOrgID', async (req, res) => {
     if (Array.isArray(contents)) {
       response.data.result = contents.map((content) => processContent(content))
     }
+    const finalResult = response.data.result.filter(function(item: IContent){
+        return item.sourceName === req.body.orgId
+    })
+    response.data.result = finalResult;
     res.json(
       response.data || {
         filters: [],
