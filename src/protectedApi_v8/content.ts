@@ -528,7 +528,7 @@ contentApi.post('/searchByOrgID', async (req, res) => {
       response.data.result = contents.map((content) => processContent(content))
     }
     const finalResult = response.data.result.filter(function(item: IContent){
-        return item.sourceName === req.body.orgId
+        return item.sourceName.toLowerCase() === req.body.orgId.toLowerCase()
     })
     response.data.result = finalResult;
     res.json(
