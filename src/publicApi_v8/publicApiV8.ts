@@ -3,6 +3,7 @@ import { CONSTANTS } from '../utils/env'
 import { proxyCreatorRoute } from '../utils/proxyCreator'
 import { customSignUp } from './customSignup'
 import { homePage } from './home'
+import { publicOrg } from './searchOrg'
 import { signup } from './signup'
 import { publicTnc } from './tnc'
 import { verifyCertiQR } from './verifyCertiQR'
@@ -23,3 +24,4 @@ publicApiV8.use('/signup', signup)
 publicApiV8.use('/homePage', homePage)
 publicApiV8.use('/register/', customSignUp)
 publicApiV8.use('/verifyCertificateQR', verifyCertiQR)
+publicApiV8.use('/org', publicOrg)
