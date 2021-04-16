@@ -14,6 +14,7 @@ import { infyRadioApi } from './infyradio'
 import { knowledgeHubApi } from './khub'
 import { leaderBoardApi } from './leaderboard'
 import { navigatorApi } from './navigator'
+import { generateQRCodeApi } from './qrcode-generation'
 import { recommendationApi } from './recommendation'
 import { socialApi } from './social'
 import { trainingApi } from './training'
@@ -48,3 +49,4 @@ protectedApiV8.use('/events', eventsApi)
 protectedApiV8.use('/translate', translateApi)
 protectedApiV8.use('/attended-content', attendedContentApi)
 protectedApiV8.use('/event-external', externalEventsApi)
+protectedApiV8.use('/generateQRCode', generateQRCodeApi)

@@ -17,6 +17,7 @@ import { publicApiV8 } from './publicApi_v8/publicApiV8'
 import { CustomKeycloak } from './utils/custom-keycloak'
 import { CONSTANTS } from './utils/env'
 import { logInfo, logSuccess } from './utils/logger'
+
 const cookieParser = require('cookie-parser')
 
 function haltOnTimedOut(req: Express.Request, _: Express.Response, next: NextFunction) {
