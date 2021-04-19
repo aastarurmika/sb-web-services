@@ -29,14 +29,14 @@ publicOrg.post('/searchByOrgID', async (req, res) => {
           }
        })
       if (inp >= 0) {searchob.filters[0].andFilters.splice(inp, 1)}
-      searchob.filters[0].andFilters.push( {
-          sourceName: req.body.orgId,
+      searchob.filters[0].andFilters.push({
+        sourceShortName: req.body.orgId
       })
 
     } else { // push sourceName
-          searchob.filters[0].andFilters.push( {
-            sourceName: req.body.orgId[0]
-        })
+      searchob.filters[0].andFilters.push( {
+        sourceShortName : req.body.orgId
+      })
     }
 
     const body = {
