@@ -533,10 +533,12 @@ contentApi.post('/searchByOrgID', async (req, res) => {
     if (Array.isArray(contents)) {
       response.data.result = contents.map((content) => processContent(content))
     }
-    const finalResult = response.data.result.filter(function(item: IContent){
+    if(response.data.result) {
+      const finalResult = response.data.result.filter(function(item: IContent){
         return item.sourceName.toLowerCase() === req.body.orgId[0].toLowerCase()
-    })
-    response.data.result = finalResult;
+      })
+      response.data.result = finalResult;
+    }
     res.json(
       response.data || {
         filters: [],

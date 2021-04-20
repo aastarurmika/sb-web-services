@@ -3,7 +3,7 @@ import { Router } from 'express'
 import { axiosRequestConfig } from '../configs/request.config'
 import { IContent } from '../models/content.model'
 import { logError, logInfo } from '../utils/logger'
-const GENERAL_ERROR_MSG = 'Failed due to unknown reason 11'
+const GENERAL_ERROR_MSG = 'Failed due to unknown reason'
 import { processContent } from '../utils/contentHelpers'
 
 import { CONSTANTS } from '../utils/env'
@@ -51,10 +51,14 @@ publicOrg.post('/searchByOrgID', async (req, res) => {
     if (Array.isArray(contents)) {
       response.data.result = contents.map((content) => processContent(content))
     }
-    const finalResult = response.data.result.filter(function(item: IContent){
+
+    if(response.data.result) {
+      const finalResult = response.data.result.filter(function(item: IContent){
         return item.sourceName.toLowerCase() === req.body.orgId[0].toLowerCase()
-    })
-    response.data.result = finalResult;
+      })
+      response.data.result = finalResult;
+    }
+
     res.json(
       response.data || {
         filters: [],
