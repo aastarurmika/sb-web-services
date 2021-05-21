@@ -24,7 +24,7 @@ customSignUp.post('/registerUserWithEmail', async (req, res) => {
   try {
     const newUser = await createKCUser(req)
     if (newUser.data.errorMessage) {
-      res.status(500).send({
+      res.status(400).send({
         error: `Error Creating User : ${newUser.data.errorMessage}`,
       })
     } else {
