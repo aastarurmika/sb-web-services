@@ -16,6 +16,7 @@ import { leaderBoardApi } from './leaderboard'
 import { navigatorApi } from './navigator'
 import { generateQRCodeApi } from './qrcode-generation'
 import { recommendationApi } from './recommendation'
+import { scromApi } from './scrom'
 import { socialApi } from './social'
 import { trainingApi } from './training'
 import { translateApi } from './translate'
@@ -50,3 +51,4 @@ protectedApiV8.use('/translate', translateApi)
 protectedApiV8.use('/attended-content', attendedContentApi)
 protectedApiV8.use('/event-external', externalEventsApi)
 protectedApiV8.use('/generateQRCode', generateQRCodeApi)
+protectedApiV8.use('/scrom', scromApi)
