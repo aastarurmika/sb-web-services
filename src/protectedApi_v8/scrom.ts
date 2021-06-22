@@ -2,7 +2,6 @@ import axios from 'axios'
 import { Router } from 'express'
 import { axiosRequestConfig } from '../configs/request.config'
 import { CONSTANTS } from '../utils/env'
-// import { logError, logInfo } from '../utils/logger'
 import { logError } from '../utils/logger'
 import { ERROR } from '../utils/message'
 import { extractUserIdFromRequest } from '../utils/requestExtract'
@@ -46,8 +45,8 @@ scromApi.get('/get/:id', async (req, res) => {
     })
 
     res.send((response.data))
-
-  } catch (err: any) {
+ // tslint:disable-next-line: no-any
+  } catch (err) {
     logError(err)
     res.status((err && err.response && err.response.status) || 500).send(
       (err && err.response && err.response.data) || {
@@ -75,10 +74,6 @@ scromApi.post('/add/:id', async (req, res) => {
       return
     }
 
-    // logInfo('======================================================================================================')
-    // logInfo(JSON.stringify(req.body))
-    // logInfo('======================================================================================================')
-
     const body = req.body
     body.contentId = contentId
     body.userId = userId
@@ -97,8 +92,8 @@ scromApi.post('/add/:id', async (req, res) => {
       }
     )
     res.send(response.data)
-
-  } catch (err: any) {
+ // tslint:disable-next-line: no-any
+  } catch (err) {
     logError(err)
     res.status((err && err.response && err.response.status) || 500).send(
       (err && err.response && err.response.data) || {
@@ -136,8 +131,8 @@ scromApi.delete('/remove/:id', async (req, res) => {
       timeout: Number(CONSTANTS.KB_TIMEOUT),
     })
     res.send((response.data))
-
-  } catch (err: any) {
+ // tslint:disable-next-line: no-any
+  } catch (err) {
     logError(err)
     res.status((err && err.response && err.response.status) || 500).send(
       (err && err.response && err.response.data) || {
