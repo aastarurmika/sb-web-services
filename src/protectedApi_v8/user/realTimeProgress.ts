@@ -12,6 +12,18 @@ const API_END_POINTS = {
 
 export const realTimeProgressApi = Router()
 
+// tslint:disable
+function isLMSContent(req:any, res:any) {
+  if(req.body.lmsType) {
+    let isLms = req.body.lmsType
+
+    if(isLms.toLowerCase() !== 'lms') {
+      // return response
+      console.log('LMS failed')
+    }
+
+}
+
 realTimeProgressApi.post('/update/:contentId', async (req, res) => {
   try {
     const org = req.header('org')
@@ -20,6 +32,9 @@ realTimeProgressApi.post('/update/:contentId', async (req, res) => {
       res.status(400).send(ERROR.ERROR_NO_ORG_DATA)
       return
     }
+
+    isLMSContent(req,res)
+   
     const userId = extractUserIdFromRequest(req)
     const params = req.params
     const contentId = params.contentId
