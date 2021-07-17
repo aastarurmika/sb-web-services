@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Router } from 'express'
 import { axiosRequestConfig } from '../../configs/request.config'
 import { CONSTANTS } from '../../utils/env'
-import { logError, logErrorHeading } from '../../utils/logger'
+import { logError, logErrorHeading,logInfoHeading } from '../../utils/logger'
 import { ERROR } from '../../utils/message'
 import { extractUserIdFromRequest } from '../../utils/requestExtract'
 
@@ -43,7 +43,7 @@ realTimeProgressApi.post('/update/:contentId', async (req, res) => {
     const requestBody = req.body
 
     let lmsStatus  = isLMSContent(requestBody)
-
+    logInfoHeading('LMS Type :' + lmsStatus)
     if(lmsStatus) {
       // check statsus of course
       var data = {
@@ -67,8 +67,11 @@ realTimeProgressApi.post('/update/:contentId', async (req, res) => {
         method:'POST',
         url: config.url
       })
+      logInfoHeading('SCROM Data' + JSON.stringify(resp.data))
       if(resp.data.status==='success'){
-        if(resp.data.data.length>0 && resp.data.data[0].cmi_core_lesson_status!='incomplete'){
+        logInfoHeading('SCROM RESPONSE SUCCESS')
+        if(resp.data.data.length>0 && resp.data.data[0].cmi_core_lesson_status==='passed'){
+          logInfoHeading('Pasing call to lex core'+JSON.stringify(resp.data))
           delete requestBody.lmsType
           const response = await axios({
             ...axiosRequestConfig,
