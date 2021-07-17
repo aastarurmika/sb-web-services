@@ -12,13 +12,11 @@ const API_END_POINTS = {
 
 export const realTimeProgressApi = Router()
 
-
-
 // tslint:disable
 function isLMSContent(req:any) : boolean {
-  if(req.body.lmsType) {
-    let isLms = req.body.lmsType
-    if(isLms.toLowerCase() !== 'lms') {
+  if(req.lmsType) {
+    let isLms = req.lmsType
+    if(isLms.toLowerCase() === 'lms') {
       // console.log('LMS failed')
       return true
     }
@@ -35,13 +33,6 @@ realTimeProgressApi.post('/update/:contentId', async (req, res) => {
       res.status(400).send(ERROR.ERROR_NO_ORG_DATA)
       return
     }
-
-    let lmsStatus  = isLMSContent(req)
-
-    if(lmsStatus) {
-      // return response to user
-    }
-   
     const userId = extractUserIdFromRequest(req)
     const params = req.params
     const contentId = params.contentId
@@ -50,16 +41,69 @@ realTimeProgressApi.post('/update/:contentId', async (req, res) => {
       res.send(400)
     }
     const requestBody = req.body
-    const response = await axios({
-      ...axiosRequestConfig,
-      data: requestBody,
-      headers: {
-        rootOrg,
-      },
-      method: 'POST',
-      url,
-    })
-    res.json(response.data)
+
+    let lmsStatus  = isLMSContent(requestBody)
+
+    if(lmsStatus) {
+      // check statsus of course
+      var data = {
+        "root_org": rootOrg,
+        "content_id":contentId,
+        "user_id": userId
+      };
+      
+      var config = {
+        method: 'post',
+        url: 'http://10.0.2.18:3131/v1/api/scrom-content',
+        headers: { 
+          'Content-Type': 'application/json'
+        },
+        data : data
+      };
+      const resp = await axios({
+        ...axiosRequestConfig,
+        data : data,
+        headers : {rootOrg},
+        method:'POST',
+        url: config.url
+      })
+      if(resp.data.status==='success'){
+        if(resp.data.data.length>0 && resp.data.data[0].cmi_core_lesson_status!='incomplete'){
+          delete requestBody.lmsType
+          const response = await axios({
+            ...axiosRequestConfig,
+            data: requestBody,
+            headers: {
+              rootOrg,
+            },
+            method: 'POST',
+            url,
+          })
+          res.json(response.data)
+        }
+        else {
+          res.status(400).send('Still incomplete')
+        }
+      }else {
+        res.status(400).send('Still incomplete')
+      }
+
+    }
+    else {
+      const response = await axios({
+        ...axiosRequestConfig,
+        data: requestBody,
+        headers: {
+          rootOrg,
+        },
+        method: 'POST',
+        url,
+      })
+      res.json(response.data)
+    }
+   
+    
+    
   } catch (err) {
     logErrorHeading('REAL TIME PROGRESS ERROR')
     logError(err)
