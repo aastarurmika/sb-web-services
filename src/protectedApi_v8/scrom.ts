@@ -81,7 +81,7 @@ scromApi.post('/add/:id', async (req, res) => {
     // logInfo('body========>', JSON.stringify(body))
     // if already passed donot update
     const config = {
-      data : {rootOrg, content_id: contentId, user_id: userId},
+      data : {rootOrg : rootOrg, content_id: contentId, user_id: userId},
       headers: {
         'Content-Type': 'application/json',
       },
